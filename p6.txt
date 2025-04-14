@@ -1,0 +1,48 @@
+import pandas as pd
+import numpy as np
+import re
+from gensim.models import Word2Vec
+from nltk.tokenize import word_tokenize
+import nltk
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+
+nltk.download('punkt')
+
+df = pd.read_csv("spam_ham_dataset.csv", encoding="latin-1")[['label', 'text']]
+df.columns = ['category', 'message']
+df['category'] = df['category'].map({'ham': 0, 'spam': 1})
+
+def clean_text(text):
+    text = text.lower()
+    text = re.sub(r'[^a-zA-Z0-9\s]', '', text)
+    return text
+
+df['cleaned_message'] = df['message'].apply(clean_text)
+df['tokens'] = df['cleaned_message'].apply(word_tokenize)
+
+word2vec_model = Word2Vec(sentences=df['tokens'].tolist(), vector_size=50, window=5, min_count=1, workers=4)
+
+def get_embedding(words):
+    vectors = [word2vec_model.wv[word] for word in words if word in word2vec_model.wv]
+    return np.mean(vectors, axis=0) if vectors else np.zeros(50)
+
+df['embeddings'] = df['tokens'].apply(get_embedding)
+
+X = np.vstack(df['embeddings'].values)
+y = df['category'].values
+
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+classifier = LogisticRegression()
+classifier.fit(X_train, y_train)
+
+def predict_email(text):
+    tokens = word_tokenize(clean_text(text))
+    embedding = get_embedding(tokens).reshape(1, -1)
+    return "Spam" if classifier.predict(embedding)[0] == 1 else "Ham"
+
+
+example_email = "Win a free lottery now! Click here to claim."
+print("Prediction:", predict_email(example_email))
