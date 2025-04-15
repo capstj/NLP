@@ -1,0 +1,411 @@
+/*Develop a simple data link layer that performs the flow control using the sliding window protocol                                                              
+                                                                                
+sample input=3
+7
+1 2 3 4 5 6 7
+Enter window size:
+Enter number of frames to transmit:                                          
+Enter 7 frames:                                                              
+                                                                                
+ with sliding window protocol the frames will be sent in the following manner(as
+suming no corruption of frames)                                                 
+                                                                                
+After sending 3 frames at each stage sender waits for acknowledgement sent by th
+e receiver                                                                      
+                                                                                
+123                                                                             
+Acknowledgement of the above frames sent is received by sender                 
+                                                                                
+456                                                                             
+Acknowledgement of the above frames sent is received by sender 
+
+7                                                                               
+ Acknowledgement of the above frames sent is received by sender
+*/
+
+//exp 1
+import spacy
+spaCy is a powerful NLP library used for text processing, tokenization, named entity recognition, and more.
+2. Create a Blank English NLP Object:
+nlp = spacy.blank("en")
+spacy.blank("en") creates an empty English NLP pipeline. This means no pre-trained models or extra functionalities (like
+named entity recognition or POS tagging) are loaded. This is useful when you want to process raw text eciently with
+minimal overhead.
+3.Process the Text
+text = "Asha is in love with Natural Language Processing."
+doc = nlp(text)
+The text "John is learning Natural Language Processing." is passed to the NLP object.
+doc = nlp(text) creates a Doc object that holds the processed text.
+2/19/25, 11:22 AM NLP LAB-P1-ASHA.ipynb - Colab
+https://colab.research.google.com/drive/1oKrq2PG8H5jI4jZY4RP4X0pNFtlWexAX#scrollTo=lGOrf7vlsU2r&printMode=true 1/2
+A Doc object is a sequence of Token objects, where each token represents a word or punctuation in the text.
+4. Select and Print the First Token:
+first_token = doc[0]
+print("First token:", first_token.text)
+First token: Asha
+doc[0] accesses the rst token (word) in the processed text.
+rst_token.text extracts and prints the actual word.
+# Import the spaCy library
+import spacy
+# Create an English NLP object using spacy.blank
+nlp = spacy.blank("en")
+# Define a sample text to process
+text = "Asha is in love with Natural Language Processing."
+# Process the text using the nlp object to create a Doc object
+doc = nlp(text)
+# The Doc object is a container for accessing linguistic annotations
+# It contains tokens, which are individual words, punctuation marks, etc.
+# Select the first token of the Doc object
+first_token = doc[0]
+# Print the text of the first token
+print("First token:", first_token.text)
+
+
+// exp 2
+import requests # To fetch Wikipedia content
+import spacy # For NLP processing
+# Step 1: Download Wikipedia page content
+url = "https://en.wikipedia.org/api/rest v1/page/summary/Open source"
+2/19/25, 11:22 AM NLP LAB-P2-ASHA.ipynb - Colab
+https://colab.research.google.com/drive/1hH60scyAEnG1MipwqY_XlY8HvfpC5MQJ#scrollTo=dYKBNNq9uuZw&printMode=true 1/2
+p p g p _ p g y p _
+response = requests.get(url) # Sending HTTP GET request
+data = response.json() # Converting response to JSON format
+text = data["extract"] # Extracting the main content
+# Step 2: Load spaCy's English model
+nlp = spacy.load("en_core_web_sm")
+# Step 3: Process text using spaCy
+doc = nlp(text)
+# Step 4: Tokenization and Stop-word Removal
+tokens = [token.text for token in doc] # Tokenizing the text
+stop_words = [token.text for token in doc if token.is_stop] # Extracting stop words
+# Step 5: Calculate Percentage of Stop Words
+total_tokens = len(tokens)
+stop_word_count = len(stop_words)
+percentage_stop_words = (stop_word_count / total_tokens) * 100
+# Display results
+print(f"Total words: {total_tokens}")
+print(f"Stop words: {stop_word_count}")
+print(f"Percentage of stop words: {percentage_stop_words:.2f}%")
+
+
+// exp 3
+import nltk
+nltk.download('punkt')
+import wikipediaapi # Wikipedia API to fetch text
+import spacy # NLP library for lemmatization
+from nltk.stem import PorterStemmer # Stemming module from nltk
+from nltk.tokenize import word_tokenize # Tokenization module
+1. Fetch Wikipedia Content
+# Step 1: Fetch Wikipedia content
+def get_wikipedia_text(page_title):
+wiki_wiki = wikipediaapi.Wikipedia(user_agent="MyNLPProject/1.0", language="en")
+page = wiki_wiki.page(page_title)
+return page.summary if page.exists() else ""
+text = get_wikipedia_text("Keshav_Memorial_Institute_of_Technology")
+This function retrieves the summary of the Wikipedia page "Open Source" using wikipediaapi.
+If the page exists, it returns the summary text.
+2. Tokenization
+# Tokenize the text
+tokens = word_tokenize(text)
+Splits the text into individual words (tokens), making it easier to process.
+3. Apply Stemming
+# Step 2: Apply Stemming
+stemmer = PorterStemmer()
+start_stem = time.time() # Start timer
+stemmed_words = [stemmer.stem(word) for word in tokens]
+end_stem = time.time() # End timer
+Uses PorterStemmer from nltk to convert words into their stemmed form.
+Example: "running" → "run", "better" → "bet".
+4. Apply Lemmatization
+# Step 3: Apply Lemmatization
+nlp = spacy.load("en_core_web_sm")
+start_lem = time.time() # Start timer
+doc = nlp(" ".join(tokens))
+lemmatized_words = [token.lemma_ for token in doc]
+end_lem = time.time() # End timer
+Uses spaCy to perform lemmatization, which provides proper root words.
+Example: "running" → "run", "better" → "good".
+The time module calculates execution times for stemming and lemmatization.
+Used to compare performance differences between the two techniques.
+5. Display Results and Performance Comparison
+# Step 4: Display Results
+print("Original Text Sample:", tokens[:10])
+print("Stemmed Words:", stemmed_words[:10])
+print("Lemmatized Words:", lemmatized_words[:10])
+# Step 5: Performance Comparison
+print("\nPerformance Analysis:")
+print(f"Stemming Execution Time: {end_stem - start_stem:.5f} seconds")
+print(f"Lemmatization Execution Time: {end_lem - start_lem:.5f} seconds")
+
+
+// exp 4
+from sklearn.feature_extraction.text import TfidfVectorizer
+ from sklearn.metrics.pairwise import cosine_similarity
+ # Sample texts
+ text1 = "Machine learning is a field of artificial intelligence."
+ text2 = "Deep learning is a branch of artificial intelligence and machine learning."
+ # Convert texts to TF-IDF vectors
+ vectorizer = TfidfVectorizer()
+ tfidf_matrix = vectorizer.fit_transform([text1, text2])
+ # Compute cosine similarity
+ cosine_sim = cosine_similarity(tfidf_matrix[0], tfidf_matrix[1])
+ print(f"Cosine Similarity (TF-IDF): {cosine_sim[0][0]:.4f}")
+ 
+ from sklearn.feature_extraction.text import TfidfVectorizer
+ from sklearn.metrics.pairwise import cosine_similarity
+ # Sample texts
+ text1 = "Machine learning is a field of artificial intelligence."
+ text2 = "Deep learning is a branch of artificial intelligence and machine learning."
+ # Convert texts to TF-IDF vectors
+ vectorizer = TfidfVectorizer()
+ tfidf_matrix = vectorizer.fit_transform([text1, text2])
+ # Compute cosine similarity
+ cosine_sim = cosine_similarity(tfidf_matrix[0], tfidf_matrix[1])
+ print(f"Cosine Similarity (TF-IDF): {cosine_sim[0][0]:.4f}")
+ 
+ // exp 5
+  import re
+ import matplotlib.pyplot as plt
+ from collections import Counter
+ # Sample text
+ text = """Natural Language Processing (NLP) is a field of artificial intelligence. 
+NLP allows computers to understand human language. NLP techniques include tokenization, 
+part-of-speech tagging, named entity recognition, and machine translation."""
+ # Preprocessing: Convert text to lowercase and remove special characters
+ text = text.lower()
+ text = re.sub(r'[^a-z\s]', '', text)  # Remove punctuation
+ # Tokenize words
+ words = text.split()
+ # Count word frequencies
+ word_counts = Counter(words)
+ # Display top 10 most common words
+ print("Top 10 words:", word_counts.most_common(10))
+ # Visualization using Bar Chart
+ plt.figure(figsize=(10, 5))
+ Your download's being scanned.
+ We'll let you know if there's an issue.
+ https://colab.research.google.com/drive/13SkuCuEuTQ7WuUQcao3IMv-bvbmjUjwD#scrollTo=PEtfpm1ibW04&printMode=true
+ 1/3
+plt.bar(*zip(*word_counts.most_common(10)))  # Plot top 10 words
+ plt.xlabel("Words")
+ plt.ylabel("Frequency")
+plt.xticks(rotation=45)
+ plt.show()
+ 
+ 
+  import re
+ import nltk
+ import matplotlib.pyplot as plt
+ from collections import Counter
+ from nltk.corpus import stopwords
+ from wordcloud import WordCloud
+ # Download stopwords if not already available
+ nltk.download('stopwords')
+ # Define stopwords
+ stop_words = set(stopwords.words('english'))
+ # Sample text
+ text = """Natural Language Processing (NLP) is a field of artificial intelligence. 
+NLP allows computers to understand human language. NLP techniques include tokenization, 
+part-of-speech tagging, named entity recognition, and machine translation."""
+ # Preprocessing: Convert to lowercase and remove special characters
+ text = text.lower()
+ text = re.sub(r'[^a-z\s]', '', text)  # Remove punctuation
+ # Tokenization and Stopword Removal
+ words = text.split()
+ filtered_words = [word for word in words if word not in stop_words]  # Remove stopwords
+ # Count word frequencies
+ word_counts = Counter(filtered_words)
+ # Display top 10 most common words
+ print("Top 10 words:", word_counts.most_common(10))
+ # Bar Chart Visualization
+ plt.figure(figsize=(10, 5))
+ plt.bar(*zip(*word_counts.most_common(10)))  # Plot top 10 words
+ plt.xlabel("Words")
+ plt.ylabel("Frequency")
+ plt.title("Word Frequency Analysis (After Stopword Removal)")
+ plt.xticks(rotation=45)
+ plt.show()
+ # Generate Word Cloud
+ wordcloud = WordCloud(width=800, height=400, background_color='white').generate_from_frequencies(word_counts)
+ # Display Word Cloud
+ plt.figure(figsize=(10, 5))
+ Your download's being scanned.
+ We'll let you know if there's an issue.
+ 3/10/25, 1:12 AM NLP LAB-P5-ASHA.ipynb - Colab
+ https://colab.research.google.com/drive/13SkuCuEuTQ7WuUQcao3IMv-bvbmjUjwD#scrollTo=PEtfpm1ibW04&printMode=true 2/3
+3/10/25, 1:12 AM
+ NLP LAB-P5-ASHA.ipynb - Colab
+ plt.imshow(wordcloud, interpolation="bilinear")
+ plt.axis("off")
+  plt.title("Word Cloud Visualization")
+ plt.show()
+ 
+ 
+ // exp 6
+ <a href="https://colab.research.google.com/github/WaryFriend456/NLP/blob/main/nlplab_p6_22BD1A660W_26_03_2025.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
+# IMPORTANT: SOME KAGGLE DATA SOURCES ARE PRIVATE
+# RUN THIS CELL IN ORDER TO IMPORT YOUR KAGGLE DATA SOURCES.
+import kagglehub
+kagglehub.login()
+
+# IMPORTANT: RUN THIS CELL IN ORDER TO IMPORT YOUR KAGGLE DATA SOURCES,
+# THEN FEEL FREE TO DELETE THIS CELL.
+# NOTE: THIS NOTEBOOK ENVIRONMENT DIFFERS FROM KAGGLE'S PYTHON
+# ENVIRONMENT SO THERE MAY BE MISSING LIBRARIES USED BY YOUR
+# NOTEBOOK.
+
+kushalbang_emails_path = kagglehub.dataset_download('kushalbang/emails')
+
+print('Data source import complete.')
+
+## Problem Statement:
+#### 6.	Implement application for Word2Vec for NLP Using Python on "email" dataset (which contains attributes like category (whether the category is ham or spam) and message (Text message)). (whether the category is ham or spam) and message (Text message)).
+#### On this application you have to perform following operations
+#### i.	generate Embeddings
+#### ii.	visualize embeddings.
+#### iii.	Cleaning the data
+#### iv.	creating a Corpus and vectors
+#### v.	Visualize email word vectors
+#### vi.	Analysing and predicting using word embeddings
+from gensim.models import Word2Vec
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+import nltk
+import pandas as pd
+import re
+import numpy as np
+from sklearn.manifold import TSNE
+import seaborn as sns
+import matplotlib.pyplot as plt
+nltk.download("stopwords")
+data = pd.read_csv("/kaggle/input/emails/email.csv")
+print(data.columns)
+data = data.dropna(subset=['Category'])
+### Data Cleaning
+#### Lowercasing, removing punctuations,tokenize
+def clean_text(text):
+    text = text.lower()
+    text = re.sub(r"[^a-zA-z\s]","",text)
+    tokens = word_tokenize(text)
+    stop_words = set(stopwords.words('english'))
+    tokens = [word for word in tokens if word not in stop_words]  # Remove stopwords
+    return tokens
+data['tokens'] = data["Message"].apply(clean_text)
+## Creating Corpus
+
+corpus = data['tokens'].tolist()
+print(corpus[:1])
+## Training Word2Vec model
+model = Word2Vec(sentences=corpus, vector_size=100, window=5, min_count=1, workers=4)
+## Visualizing Word vectors
+## Using tSNE
+def plot_word_embeddings(model, num_words=100):
+    words = list(model.wv.index_to_key)[:num_words]
+    word_vectors = np.array([model.wv[word] for word in words])  ## Generate Word Embbeddings
+    tsne = TSNE(n_components=2, random_state=42)
+    reduced_vectors = tsne.fit_transform(word_vectors)
+    plt.figure(figsize=(12, 8))
+    sns.scatterplot(x=reduced_vectors[:, 0], y=reduced_vectors[:, 1])
+    for i, word in enumerate(words):
+        plt.annotate(word, (reduced_vectors[i, 0], reduced_vectors[i, 1]))
+    plt.title('t-SNE Visualization of Word Embeddings')
+    plt.show()
+
+plot_word_embeddings(model)
+## Using PCA, We need dimensionality reduction so we use PCA.
+from sklearn.decomposition import PCA
+def plot_word_embeddings_pca(model, num_words=100):
+    words = list(model.wv.index_to_key)[:num_words]
+    word_vectors = np.array([model.wv[word] for word in words])  # Generate Word Embeddings
+
+    # Apply PCA
+    pca = PCA(n_components=2)
+    reduced_vectors = pca.fit_transform(word_vectors)
+
+    # Plot PCA results
+    plt.figure(figsize=(12, 8))
+    sns.scatterplot(x=reduced_vectors[:, 0], y=reduced_vectors[:, 1])
+
+    for i, word in enumerate(words):
+        plt.annotate(word, (reduced_vectors[i, 0], reduced_vectors[i, 1]))
+
+    plt.title("PCA Visualization of Word Embeddings")
+    plt.show()
+
+# Call the function
+plot_word_embeddings_pca(model)
+# Predicting Spam using Embeddings
+def doc_vec(tokens):
+    vectors = [model.wv[word] for word in tokens if word in model.wv]
+    if(len(vectors)>0):
+        return np.mean(vectors,axis =0)
+    else:
+        return np.zeros(model.vector_size)
+
+data = data.dropna(subset=["Category"])
+data['vector_avg'] = data['tokens'].apply(doc_vec)
+print(data['vector_avg'])
+
+## Accuracy
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+print(data["Category"])
+data = data.dropna(subset=['vector_avg'])
+data = data.dropna(subset=['Category'])
+
+data["Category"] = data['Category'].map({'ham': 0, 'spam': 1})
+data = data.dropna(subset=['vector_avg'])
+data = data.dropna(subset=['Category'])
+X = np.vstack(data['vector_avg'].values)
+y = data["Category"].values
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Training classifier
+clf = RandomForestClassifier()
+clf.fit(X_train, y_train)
+
+y_pred = clf.predict(X_test)
+print("Accuracy:", accuracy_score(y_test, y_pred))
+
+### Prediction
+def predict_email(email):
+    # Preprocess input email
+    tokens = clean_text(email)
+
+    # Convert tokens to Word2Vec embeddings and average them
+    word_vectors = [model.wv[word] for word in tokens if word in model.wv]
+    if len(word_vectors) == 0:
+        return "Cannot classify (no known words)"
+
+    email_vector = np.mean(word_vectors, axis=0).reshape(1, -1)
+
+    # Predict spam or ham
+    prediction = clf.predict(email_vector)
+
+    return "Spam" if prediction[0] == 1 else "Ham"
+
+# Example usage
+email_input1 = "WINNER!! As a valued network customer you have been selected to receivea Â£900 prize reward! To claim call 09061701461. Claim code KL341. Valid 12 hours only."
+email_input2 = "Well keep in mind I've only got enough gas for one more round trip barring a sudden influx of cash"
+print("Email:",email_input1)
+print("Prediction:", predict_email(email_input1))
+print("\n")
+print("Email:",email_input2)
+print("Prediction:", predict_email(email_input2))
+from sklearn.metrics.pairwise import cosine_similarity
+import random
+# Select 10 random words from the trained Word2Vec model
+random_words = random.sample(model.wv.index_to_key, 10)
+
+# Compute cosine similarity matrix
+word_vectors = np.array([model.wv[word] for word in random_words])
+similarity_matrix = cosine_similarity(word_vectors)
+
+# Plot heatmap
+plt.figure(figsize=(10, 8))
+sns.heatmap(similarity_matrix, annot=True, xticklabels=random_words, yticklabels=random_words, cmap="coolwarm")
+plt.title("Random Word Similarity Heatmap")
+plt.show()
